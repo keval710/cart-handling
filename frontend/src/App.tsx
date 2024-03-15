@@ -1,29 +1,34 @@
-import { useEffect } from "react";
 import "./App.css";
 import Home from "./components/Home";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchData, fetchDataFun } from "./store/slice/fetchProductSlice";
-import { AppDispatch, RootState } from "./store/Store";
 import NavBar from "./components/NavBar";
 import { Toaster } from "react-hot-toast";
-
+import { useGetProductQuery } from "./store/api/fetchAPI";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import CheckOut from "./components/CheckOut";
+// import { AppDispatch, RootState } from "./store/Store";
+// import { fetchDataFun } from "./store/slice/fetchProductSlice";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useEffect } from "react";
 const App = () => {
-  const product: {
-    data: fetchData[];
-    isLoading: boolean;
-  } = useSelector((state: RootState) => state.product);
+  // const dispatch: AppDispatch = useDispatch();
+  // const product = useSelector((state: RootState) => state.product);
 
-  const dispatch: AppDispatch = useDispatch();
+  const { data, isLoading } = useGetProductQuery("fetchAPI");
 
-  useEffect(() => {
-    dispatch(fetchDataFun());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchDataFun());
+  // }, [dispatch]);
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={true} />
-      <NavBar />
-      <Home product={product} />
+      <Toaster position="top-center" reverseOrder={true} />
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home product={{ data, isLoading }} />} />
+          <Route path="/checkout" element={<CheckOut />} />
+        </Routes>
+      </Router>
     </>
   );
 };

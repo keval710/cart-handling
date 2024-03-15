@@ -47,15 +47,18 @@ const cart = createSlice({
     },
 
     placeOrder: (state) => {
-      const toastLoading = toast.loading("order placing...");
-      toastLoading;
-      state.cart = [];
-      setTimeout(() => {
-        toast.success("order placed Successfully", {
-          id: toastLoading,
-          duration: 1000,
-        });
-      }, 2000);
+      if (state.cart.length > 0) {
+        const toastLoading = toast.loading("order placing...");
+        setTimeout(() => {
+          toast.success("order placed Successfully", {
+            id: toastLoading,
+            duration: 1000,
+          });
+        }, 2000);
+        state.cart = [];
+      } else {
+        toast.error("Cart is empty 👾", { duration: 1000 });
+      }
     },
   },
 });

@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/Store";
 import { placeOrder, removeFromCart } from "../store/slice/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   handleCartOpen: () => void;
 }
 
 const Cart: React.FC<Props> = ({ handleCartOpen }) => {
+  const navigate = useNavigate();
   const cartValue = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
 
@@ -107,7 +109,15 @@ const Cart: React.FC<Props> = ({ handleCartOpen }) => {
                     <div className="mt-6">
                       <a
                         className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 cursor-pointer"
-                        onClick={() => dispatch(placeOrder())}
+                        onClick={() => {
+                          dispatch(placeOrder());
+                          if (cartValue.cart.length > 0) {
+                            setTimeout(() => {
+                              handleCartOpen();
+                              navigate("/checkout");
+                            }, 2000);
+                          }
+                        }}
                       >
                         Checkout
                       </a>
